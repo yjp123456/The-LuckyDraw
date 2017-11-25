@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>卷轴展开demo</title>
+    <link rel="stylesheet" href="./style/prize.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0
+        }
+
+        ul, li {
+            text-indent: 0;
+            text-decoration: none;
+            margin: 0;
+            padding: 0
+        }
+
+        img {
+            border: 0
+        }
+
+        body {
+            background-color: #000;
+            color: #999;
+            font: 100%/18px helvetica, arial, sans-serif
+        }
+
+        canvas {
+            display: block;
+            left: 0;
+            position: absolute;
+            top: 0;
+            z-index: 20
+        }
+
+        #header img {
+            width: 100%;
+            height: 20%;
+        }
+
+        audio {
+            position: fixed;
+            display: none;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 5
+        }
+
+        .en-markup-crop-options div div:first-of-type {
+            margin-left: 0px !important;
+        }
+
+
+    </style>
+</head>
+<body>
+<div id="bg">
+    <img src="./img/pause.png">
+</div>
+<!--content-->
+<div class="container">
+    <div class="header">
+        <div class="pic-index-tl"></div>
+        <div class="pic-index-tr"></div>
+    </div>
+    <div class="content">
+        <div class="l-pic-index"></div>
+        <div class="r-pic-index"></div>
+        <div class="l-bg-index"></div>
+        <div class="r-bg-index"></div>
+        <div class="main-index">
+            <h1 class="title">TEST</h1>
+
+            <div class="intro-text">
+                <div id="wrapper">
+                    <div id="scroller">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tail">
+        <div class="pic-index-bl"></div>
+        <div class="pic-index-br"></div>
+    </div>
+</div>
+
+<script src="./js/public/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="./js/public/bower_components/jquery-mousewheel/jquery.mousewheel.js"></script>
+<script src="./js/util.js"></script>
+<script src="./js/public/SkyRTC-client.js"></script>
+<script src="js/firework.js"></script>
+<script type="text/javascript" src="./js/public/iscroll.js"></script>
+<script type="text/javascript">
+    var myScroll;
+    var isNeedFirework = false;
+    var userWidth;
+    function loaded() {
+        myScroll = new iScroll('wrapper', {
+            useTransition: true,
+            topOffset: 0,
+            interactiveScrollbars: true,
+            shrinkScrollbars: 'scale',
+            fadeScrollbars: true,
+            onRefresh: function () {
+
+            },
+            onScrollMove: function () {
+
+            },
+            onScrollEnd: function () {
+
+            }
+        });
+
+    }
+    ;
+    document.addEventListener('touchmove', function (e) {
+        e.preventDefault();
+    }, false);
+
+    document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(loaded, 200);
+    }, false);
+
+    $(window).resize(function () {
+        if ($("#bg").is(":hidden"))
+            init();
+    });
+
+    $("#bg").click(function () {
+        $(this).hide();
+        init();
+        test();
+    })
+
+    function init() {
+        //卷轴展开动画效果
+        var title = getParameter("title");
+        $(".title").text(title);
+        var number = getParameter("number");
+        var indexWidth = $(".l-pic-index").width();
+        var bgWidth = $(".content").width() * 0.5 - 30 - indexWidth;
+        if (parseInt(number) < 5) {
+            isNeedFirework = true;
+            userWidth = bgWidth - 50;
+        } else
+            userWidth = (bgWidth - 50) / 3;
+        $(".user").css("width", userWidth);
+        $(".user").css("height", userWidth / 3);
+
+        $(".l-pic-index").css("left", "50%");
+        $(".r-pic-index").css("right", "50%");
+        $(".pic-index-tl").css("left", "50%");
+        $(".pic-index-bl").css("left", "50%");
+        $(".pic-index-tr").css("right", "50%");
+        $(".pic-index-br").css("right", "50%");
+        $(".l-bg-index").css("left", "50%");
+        $(".l-bg-index").css("width", "20px");
+        $(".r-bg-index").css("right", "50%");
+        $(".r-bg-index").css("width", "20px");
+
+        $(".l-pic-index").animate({'left': '30px'}, 1500);
+        $(".r-pic-index").animate({'right': '30px'}, 1500);
+        $(".pic-index-tl").animate({'left': '30px'}, 1500);
+        $(".pic-index-bl").animate({'left': '30px'}, 1500);
+        $(".pic-index-tr").animate({'right': '30px'}, 1500);
+        $(".pic-index-br").animate({'right': '30px'}, 1500);
+        $(".l-bg-index").animate({'width': bgWidth * 2, 'left': 30 + indexWidth}, 1500);
+        $(".r-bg-index").animate({'width': bgWidth * 2, 'right': 30 + indexWidth}, 1500, function () {
+            $(".main-index").css("left", 30 + indexWidth);
+            $(".main-index").css("right", 30 + indexWidth);
+            $(".main-index").fadeIn(800);
+        });
+    }
+
+    var i = 0;
+    function addUser(userName) {
+        var user = $("<div/>", {
+            class: "user",
+            id: i
+        }).text(userName).appendTo($("#scroller"));
+        user.css("width", userWidth);
+        user.css("height", userWidth / 3);
+
+        user.fadeIn(3000);
+        var h = $(".intro-text")[0].scrollHeight;
+        $(".intro-text").scrollTop(h);
+        if (isNeedFirework) {
+            fireWorks.startOnElement(i, userWidth);
+        }
+        i++;
+    }
+
+    function test() {
+        var test = setInterval(function () {
+            var user = $("<div/>", {
+                class: "user",
+                id: i
+            }).text("yang" + i).appendTo($("#scroller"));
+            user.css("width", userWidth);
+            user.css("height", userWidth / 3);
+
+            user.fadeIn(3000);
+            var h = $("#scroller")[0].scrollHeight;
+            $("#scroller").scrollTop(h);
+
+            if (isNeedFirework) {
+                fireWorks.startOnElement(i, userWidth);
+            }
+
+            i++;
+            if (i > 10)
+                clearInterval(test);
+        }, 3000);
+    }
+
+
+</script>
+<script src="./js/prize_rtc.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="description" content="the-engine">
+    <meta name="author" content="the-engine team">
+    <title>THE YEP</title>
+    <link rel="stylesheet" href="./js/public/bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+
+    <script src="./js/public/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="./js/util.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h2 style="text-align: center">YEP2017</h2>
+
+    <table class="table" id="content">
+        <caption id="total">0</caption>
+        <thead>
+        <tr>
+            <th>姓名</th>
+            <th>AFID</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <div style="text-align: center">
+        <input type="button" class="btn btn-primary" onclick="exportUsers()" value="导出用户名单">
+        <input type="button" class="btn btn-primary" onclick="exportPrizes()" value="导出获奖名单">
+    </div>
+</div>
+<script src="./js/public/SkyRTC-client.js"></script>
+<script src="./js/user.js"></script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+/*通用样式*/
+body, ul, li, p, h1, h2, h3, h4, h5 {
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+}
+
+body {
+    font-family: 'Microsoft YaHei UI', 'Microsoft YaHei', SimSun, 'Segoe UI', Tahoma, Helvetica, Sans-Serif;
+    font-size: 14px;
+    background: #6f0b02;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: 100%;
+    margin: 0;
+}
+
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button;
+    cursor: pointer;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+    background: transparent;
+}
+
+a:focus {
+    outline: none;
+}
+
+img {
+    border: 0;
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.center {
+    width: 1000px;
+    margin: 0 auto 0;
+}
+
+/*content*/
+.container {
+    position: absolute;
+    left: 30px;
+    right: 30px;
+    top: 30px;
+    bottom: 30px;
+}
+
+.header {
+    position: relative;
+    left: 20px;
+    right: 20px;
+    top: 0px;
+    height: 10%;
+}
+
+.tail {
+    position: relative;
+    left: 20px;
+    right: 20px;
+    top: 0px;
+    height: 10%;
+}
+
+.pic-index-tl {
+    background: url("../img/l-pic-index-top.png") no-repeat right 0;
+    background-size: cover;
+    position: absolute;
+    left: 50%;
+    width: 4vw;
+    height: 100%;
+}
+
+.pic-index-tr {
+    background: url("../img/l-pic-index-top.png") no-repeat left 0;
+    background-size: cover;
+    position: absolute;
+    width: 4vw;
+    height: 100%;
+    right: 50%;
+
+}
+
+.pic-index-bl {
+    background: url("../img/l-pic-index-bottom.png") no-repeat right 0;
+    background-size: cover;
+    position: absolute;
+    width: 4vw;
+    height: 100%;
+    left: 50%;
+}
+
+.pic-index-br {
+    background: url("../img/l-pic-index-bottom.png") no-repeat right 0;
+    background-size: cover;
+    position: absolute;
+    width: 4vw;
+    height: 100%;
+    right: 50%;
+}
+
+.content {
+    position: relative;
+    left: 20px;
+    right: 20px;
+    top: 0px;
+    height: 80%;
+}
+
+.l-pic-index {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+    width: 4vw;
+    background: url("../img/l-pic-index-mid.png") no-repeat right 0;
+    background-size: cover;
+
+}
+
+.r-pic-index {
+    position: absolute;
+    right: 50%;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+    width: 4vw;
+    background: url("../img/l-pic-index-mid.png") no-repeat left 0;
+    background-size: cover;
+}
+
+.l-bg-index {
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 50%;
+    z-index: 1;
+    width: 20px;
+    background: url(../img/l-bg-index.png) fixed center center no-repeat;;
+    background-size: cover;
+}
+
+.r-bg-index {
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    right: 50%;;
+    z-index: 1;
+    width: 20px;
+    background: url(../img/r-bg-index.png) fixed center center no-repeat;
+    background-size: cover;
+}
+
+.main-index {
+    display: none;
+    overflow: hidden;
+    zoom: 1;
+    position: absolute;
+    z-index: 5;
+    left: 130px;
+    right: 130px;
+    top: 10px;
+    bottom: 10px;
+    color: #2e2e2e;
+}
+
+.intro-text {
+    position: absolute;
+    top: 20%;
+    width: 100%;
+    bottom: 5%;
+    overflow: auto;
+}
+
+.user {
+    position: relative;
+    float: left;
+    display: none;
+    font-size: 1.5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    position: absolute;
+    height: 20%;
+    width: 100%;
+    font-size: 2vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#wrapper {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    top: 0px;
+    bottom: 0px;
+}
+
+#scroller {
+    position: absolute;
+    z-index: 1;
+    top: 0px;
+    bottom: 0px;
+    left: 0;
+    width: 100%;
+    overflow: auto;
+}
+
+#scroller::-webkit-scrollbar {
+    width: 1px;
+    height: 16px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+}
+
+/*定义滚动条的轨道，内阴影及圆角*/
+#scroller::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    border-radius: 10px;
+    background-color: #f5f5f5;
+}
+
+/*定义滑块，内阴影及圆角*/
+#scroller::-webkit-scrollbar-thumb {
+    /*width: 10px;*/
+    height: 20px;
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #555;
+}
+
+#bg {
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    filter: Alpha(opacity=50);
+    opacity: 0.5;
+    background: #000000;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#bg img {
+    position: absolute;
+    width: 10vw;
+    height: 10vw;
+}

@@ -1,0 +1,20 @@
+{
+  "name": "the-engine-danmu",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+  },
+  "dependencies": {
+    "body-parser": "^1.13.2",
+    "debug": "^2.2.0",
+    "serve-favicon": "^2.3.0",
+    "express": "^4.14.0",
+    "express-session": "^1.15.4",
+    "connect-flash": "^0.1.1",
+    "ws": "^3.1.0",
+    "node-uuid": "^1.4.8",
+    "node-xlsx": "^0.11.0",
+    "connect-mongodb": "^1.1.5",
+    "mongodb": "^2.2.30"
+  }
+}

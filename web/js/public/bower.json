@@ -1,0 +1,20 @@
+{
+    "name": "the-danmu",
+    "version": "0.0.1",
+    "description": "the-danmu",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/trails-of-codes/texas-hold-em-danmu"
+    },
+    "keywords": [
+        "IRDA"
+    ],
+    "author": "the-engine team",
+    "license": "GPL",
+    "dependencies": {
+        "bootstrap": "^3.2.0",
+        "jquery": "^2.2.4",
+        "jquery-mousewheel":"^3.1.12"
+
+    }
+}
