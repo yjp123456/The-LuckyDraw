@@ -14,14 +14,14 @@ function initWebsock() {
 
     rtc.on('__addPrizeUserSuccess', function (user) {
         console.log('receive add user message : ' + JSON.stringify(user));
-        addUser(user.userName);
+        addPrize(user.userName);
     });
 
     rtc.on('__join', function (data) {
         console.log('receive __join : ' + JSON.stringify(data));
         if (data) {
             for (var i = 0; i < data.length; i++) {
-                addUser(data[i].userName);
+                addPrize(data[i].userName);
             }
         }
     });

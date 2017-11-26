@@ -281,7 +281,7 @@ $(function () {
 
             $(self.canvas).mousewheel(function (event, delta) {
                 //var direction = delta > 0 ? 'Up' : 'Down';
-                var step = $("#scroller").height();            //可视区高度
+                var step = $("#scroller").height()/2;            //可视区高度
                 var cur_top = $("#scroller").scrollTop();    //当前滚过的高度
                 var direction = delta > 0 ? -1 : 1;
                 var height = direction * step + cur_top;
@@ -318,9 +318,11 @@ $(function () {
             self.ctx.clearRect(0, 0, self.cw, self.ch);
         };
 
-        self.startOnElement = function (id, userWidth) {
-            self.mx = $("#" + id).offset().left + userWidth / 2;
-            self.my = $("#" + id).offset().top + userWidth / 6;
+        self.startOnElement = function (id) {
+            var red = $("#" + id).find(".red");
+            var redWidth = red.width();
+            self.mx = red.offset().left + redWidth / 2;
+            self.my = red.offset().top + redWidth / 2;
             self.currentHue = rand(self.hueMin, self.hueMax);
             self.createFireworks(self.cw / 2, self.ch, self.mx, self.my);
         }

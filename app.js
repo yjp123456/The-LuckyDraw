@@ -10,7 +10,7 @@ var db = require('./database/msession');
 var userLogic = require("./work_units/user_logic");
 var ErrorCode = require('./constants/error_code.js');
 var errorCode = new ErrorCode();
-var isReset = parseInt(process.argv[2]) || true;
+var isReset = parseInt(process.argv[2]) || false;
 
 var httpServer = require('http').createServer(app);
 var httpPort = normalizePort('3000');

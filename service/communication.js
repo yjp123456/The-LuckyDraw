@@ -48,6 +48,12 @@ function SkyRTC(tableNumber) {
         that.initGuestData(socket.id);
     });
 
+    this.on('__clearData', function (data, socket) {
+        console.log("receive clear db command");
+        var that = this;
+        that.initDB(true);
+    });
+
     this.on('__addPrizeUser', function (data, socket) {
         var that = this;
         console.log("receive message: " + JSON.stringify(data));
@@ -204,6 +210,68 @@ SkyRTC.prototype.init = function (socket) {
     });
 };
 
+SkyRTC.prototype.initDB = function(isReset){
+    var that = this;
+    that.prizes = {};
+    that.guests = {};
+    that.users = [];
+    that.userAndID = [];
+    that.AFID = {};
+    if (isReset) {
+        console.log("start reset all user");
+        userLogic.readUser(function () {
+            userLogic.getAllUser(function (error_code, users) {
+                if (error_code.code === errorCode.SUCCESS.code) {
+                    if (users && users.length > 0) {
+                        for (var i = 0; i < users.length; i++) {
+                            if (users[i].ID === "N/A") {
+                                that.users.push(users[i].userName);
+                            } else {
+                                that.userAndID.push(users[i]);
+                                that.AFID[users[i].ID] = true;
+                            }
+                        }
+                    }
+                } else {
+                    console.log("get user by id fail");
+                }
+            });
+        });
+
+        userLogic.removeAllPrize(function () {
+        });
+    } else {
+        userLogic.getAllUser(function (error_code, users) {
+            if (error_code.code === errorCode.SUCCESS.code) {
+                if (users && users.length > 0) {
+                    for (var i = 0; i < users.length; i++) {
+                        if (users[i].ID === "N/A") {
+                            that.users.push(users[i].userName);
+                        } else {
+                            that.userAndID.push(users[i]);
+                            that.AFID[users[i].ID] = true;
+                        }
+                    }
+                }
+            } else {
+                console.log("get user by id fail");
+            }
+        });
+    }
+
+    userLogic.getAllPrize(function (error_code, prizes) {
+        if (error_code.code === errorCode.SUCCESS.code) {
+            if (prizes && prizes.length > 0) {
+                for (var i = 0; i < prizes.length; i++) {
+                    that.prizes[prizes[i].prizeName] = prizes[i].users;
+                }
+            }
+        } else {
+            console.log("get prize fail");
+        }
+    });
+};
+
 exports.listen = function (server, isReset, tableNumber) {
     var SkyRTCServer;
     if (typeof server === 'number') {
@@ -222,59 +290,8 @@ exports.listen = function (server, isReset, tableNumber) {
         this.rtc.init(socket);
     });
 
-    if (isReset) {
-        console.log("start reset all user");
-        userLogic.readUser(function () {
-            userLogic.getAllUser(function (error_code, users) {
-                if (error_code.code === errorCode.SUCCESS.code) {
-                    if (users && users.length > 0) {
-                        for (var i = 0; i < users.length; i++) {
-                            if (users[i].ID === "N/A") {
-                                SkyRTCServer.rtc.users.push(users[i].userName);
-                            } else {
-                                SkyRTCServer.rtc.userAndID.push(users[i]);
-                                SkyRTCServer.rtc.AFID[users[i].ID] = true;
-                            }
-                        }
-                    }
-                } else {
-                    console.log("get user by id fail");
-                }
-            });
-        });
+    SkyRTCServer.rtc.initDB(isReset);
 
-        userLogic.removeAllPrize(function () {
-        });
-    } else {
-        userLogic.getAllUser(function (error_code, users) {
-            if (error_code.code === errorCode.SUCCESS.code) {
-                if (users && users.length > 0) {
-                    for (var i = 0; i < users.length; i++) {
-                        if (users[i].ID === "N/A") {
-                            SkyRTCServer.rtc.users.push(users[i].userName);
-                        } else {
-                            SkyRTCServer.rtc.userAndID.push(users[i]);
-                            SkyRTCServer.rtc.AFID[users[i].ID] = true;
-                        }
-                    }
-                }
-            } else {
-                console.log("get user by id fail");
-            }
-        });
-    }
-
-    userLogic.getAllPrize(function (error_code, prizes) {
-        if (error_code.code === errorCode.SUCCESS.code) {
-            if (prizes && prizes.length > 0) {
-                for (var i = 0; i < prizes.length; i++) {
-                    SkyRTCServer.rtc.prizes[prizes[i].prizeName] = prizes[i].users;
-                }
-            }
-        } else {
-            console.log("get prize fail");
-        }
-    });
 
     return SkyRTCServer;
 };

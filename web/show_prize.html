@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>卷轴展开demo</title>
     <link rel="stylesheet" href="./style/prize.css">
+    <link rel="stylesheet" href="./style/csshake.min.css">
     <style>
         html, body {
             height: 100%;
@@ -62,6 +63,7 @@
 <div id="bg">
     <img src="./img/pause.png">
 </div>
+
 <!--content-->
 <div class="container">
     <div class="header">
@@ -98,8 +100,11 @@
 <script type="text/javascript" src="./js/public/iscroll.js"></script>
 <script type="text/javascript">
     var myScroll;
-    var isNeedFirework = false;
+    var isNeedFirework = true;
     var userWidth;
+    var prizeIndex = 0;
+    var lineNumer = 5;
+
     function loaded() {
         myScroll = new iScroll('wrapper', {
             useTransition: true,
@@ -146,13 +151,15 @@
         var number = getParameter("number");
         var indexWidth = $(".l-pic-index").width();
         var bgWidth = $(".content").width() * 0.5 - 30 - indexWidth;
-        if (parseInt(number) < 5) {
-            isNeedFirework = true;
-            userWidth = bgWidth - 50;
-        } else
-            userWidth = (bgWidth - 50) / 3;
+        userWidth = bgWidth / (lineNumer/2);
+        if ($(".user").length == 0) {
+            for (var i = 0; i < number; i++) {
+                addUser(i);
+            }
+        }
+
         $(".user").css("width", userWidth);
-        $(".user").css("height", userWidth / 3);
+        $(".user").css("height", "10vw");
 
         $(".l-pic-index").css("left", "50%");
         $(".r-pic-index").css("right", "50%");
@@ -179,43 +186,54 @@
         });
     }
 
-    var i = 0;
-    function addUser(userName) {
+
+    function addUser(index) {
         var user = $("<div/>", {
             class: "user",
-            id: i
-        }).text(userName).appendTo($("#scroller"));
+            id: index
+        }).appendTo($("#scroller"));
+        var red = $("<div/>", {
+            class: "red"
+        }).appendTo(user);
         user.css("width", userWidth);
-        user.css("height", userWidth / 3);
-
-        user.fadeIn(3000);
-        var h = $(".intro-text")[0].scrollHeight;
-        $(".intro-text").scrollTop(h);
-        if (isNeedFirework) {
-            fireWorks.startOnElement(i, userWidth);
-        }
-        i++;
+        user.css("height", "10vw");
     }
 
+    function addPrize(userName) {
+        var user = $("#" + prizeIndex);
+        startAnimation(user, userName);
+        prizeIndex++;
+    }
+
+    function startAnimation(user, userName) {
+        user.fadeIn(3000);
+        var red = user.find(".red");
+
+        var line = prizeIndex % lineNumer;
+        if (line == 0 && prizeIndex > 0) {
+            var h = $("#scroller").scrollTop();
+            h += user.height();
+            $("#scroller").scrollTop(h);
+        }
+
+        if (isNeedFirework) {
+            fireWorks.startOnElement(prizeIndex);
+        }
+        //red.addClass('shake-chunk');
+        red.css("animation", "shake-chunk 4s ease-in-out infinite");
+        setTimeout(function () {
+            // 在带有red样式的div中删除shake-chunk样式
+            red.remove();
+            user.text(userName);
+        }, 2000);
+    }
+
+    var temp = 0;
     function test() {
         var test = setInterval(function () {
-            var user = $("<div/>", {
-                class: "user",
-                id: i
-            }).text("yang" + i).appendTo($("#scroller"));
-            user.css("width", userWidth);
-            user.css("height", userWidth / 3);
-
-            user.fadeIn(3000);
-            var h = $("#scroller")[0].scrollHeight;
-            $("#scroller").scrollTop(h);
-
-            if (isNeedFirework) {
-                fireWorks.startOnElement(i, userWidth);
-            }
-
-            i++;
-            if (i > 10)
+            addPrize("yang" + temp);
+            temp++;
+            if (temp > 9)
                 clearInterval(test);
         }, 3000);
     }

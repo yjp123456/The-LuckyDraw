@@ -76,3 +76,16 @@ function exportPrizes() {
         }
     }, "json");
 }
+
+function clearData(){
+    if(confirm("确定清空数据库吗？")) {
+        var message = {
+            'eventName': '__clearData',
+            'data': {}
+        };
+        rtc.sendMessage(message);
+        $("#content tbody").empty();
+        totalUserNumber = 0;
+        $("#total").text("用户总数: " + totalUserNumber);
+    }
+}
