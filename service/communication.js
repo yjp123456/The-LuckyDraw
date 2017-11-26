@@ -213,7 +213,6 @@ SkyRTC.prototype.init = function (socket) {
 SkyRTC.prototype.initDB = function(isReset){
     var that = this;
     that.prizes = {};
-    that.guests = {};
     that.users = [];
     that.userAndID = [];
     that.AFID = {};

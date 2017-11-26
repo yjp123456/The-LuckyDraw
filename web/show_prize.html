@@ -103,7 +103,7 @@
     var isNeedFirework = true;
     var userWidth;
     var prizeIndex = 0;
-    var lineNumer = 5;
+    var lineNumer = 4;
 
     function loaded() {
         myScroll = new iScroll('wrapper', {
@@ -151,7 +151,7 @@
         var number = getParameter("number");
         var indexWidth = $(".l-pic-index").width();
         var bgWidth = $(".content").width() * 0.5 - 30 - indexWidth;
-        userWidth = bgWidth / (lineNumer/2);
+        userWidth = bgWidth / (lineNumer / 2) - 1;
         if ($(".user").length == 0) {
             for (var i = 0; i < number; i++) {
                 addUser(i);
@@ -206,9 +206,7 @@
     }
 
     function startAnimation(user, userName) {
-        user.fadeIn(3000);
         var red = user.find(".red");
-
         var line = prizeIndex % lineNumer;
         if (line == 0 && prizeIndex > 0) {
             var h = $("#scroller").scrollTop();
@@ -220,7 +218,7 @@
             fireWorks.startOnElement(prizeIndex);
         }
         //red.addClass('shake-chunk');
-        red.css("animation", "shake-chunk 4s ease-in-out infinite");
+        red.css("animation", "shake-chunk 3s ease-in-out infinite");
         setTimeout(function () {
             // 在带有red样式的div中删除shake-chunk样式
             red.remove();
