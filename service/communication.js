@@ -44,6 +44,7 @@ function SkyRTC(tableNumber) {
 
         console.log('on __join, prize name = ' + prize_name);
         socket.prize_name = prize_name;
+        socket.isUserManager = isUserManager;
         that.guests[socket.id] = socket;
         that.initGuestData(socket.id);
     });
@@ -88,6 +89,44 @@ function SkyRTC(tableNumber) {
         }
     });
 
+    this.on('__saveData', function (data, socket) {
+        var that = this;
+        if (data && socket.isUserManager) {
+            for (var i = 0; i < data.length; i++) {
+                userLogic.updateUser(data[i], function (error_code, userName) {
+                    if (error_code.code === errorCode.SUCCESS.code) {
+                        console.log("save user:" + userName + " success");
+                    }
+                });
+            }
+            var message = {
+                'eventName': '__savUserSuccess',
+                'data': {}
+            };
+            that.sendMessage(socket, message);
+            that.users = [];
+            that.userAndID = [];
+            that.AFID = {};
+            userLogic.getAllUser(function (error_code, users) {
+                if (error_code.code === errorCode.SUCCESS.code) {
+                    if (users && users.length > 0) {
+                        for (var i = 0; i < users.length; i++) {
+                            if (users[i].ID === "N/A") {
+                                that.users.push(users[i].userName);
+                            } else {
+                                that.userAndID.push(users[i]);
+                                that.AFID[users[i].ID] = true;
+                            }
+                        }
+                    }
+                } else {
+                    console.log("get user by id fail");
+                }
+            });
+
+        }
+    });
+
     this.on('__addUserAFID', function (data, socket) {
         var that = this;
         console.log("receive message: " + JSON.stringify(data));
@@ -102,20 +141,23 @@ function SkyRTC(tableNumber) {
             if (that.users.length > 0) {
                 var ran = parseInt(Math.random() * (that.users.length));
                 var userName = that.users[ran];
-                that.userAndID.push({userName: userName, ID: ID});
-                that.users.splice(ran, 1);
+                var user = {userName: userName, ID: ID};
+
                 that.AFID[ID] = true;
-                userLogic.updateUser(userName, ID, function (error_code) {
+                userLogic.updateUser(user, function (error_code, userName) {
                     if (error_code.code === errorCode.SUCCESS.code) {
                         var message = {
                             'eventName': '__addUserAFIDSuccess',
                             'data': {userName: userName, ID: ID}
                         };
                         that.sendMessage(that.guests[socket.id], message);
+                        that.userAndID.push(user);
+                        that.users.splice(ran, 1);
                     } else {
                         that.AFID[ID] = false;
                     }
                 });
+
             } else {
                 console.log("no enough user for AFID");
             }
@@ -147,7 +189,7 @@ SkyRTC.prototype.initGuestData = function (guest) {
     if (isUserManager)
         data = that.userAndID;
     else
-        data = that.prizes[prize_name];
+        data = that.prizes[prize_name] || [];
     var message = {
         'eventName': '__join',
         'data': data
@@ -210,7 +252,7 @@ SkyRTC.prototype.init = function (socket) {
     });
 };
 
-SkyRTC.prototype.initDB = function(isReset){
+SkyRTC.prototype.initDB = function (isReset) {
     var that = this;
     that.prizes = {};
     that.users = [];

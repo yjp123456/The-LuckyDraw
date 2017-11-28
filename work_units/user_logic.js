@@ -49,12 +49,12 @@ exports.readUser = function (callback) {
 
 exports.exportUser = function (callback) {
     userDao.getAllUser(function (error_code, results) {
-        var data = [{name: "sheet1", data: [["姓名", "AFID"]]}];
+        var data = [{name: "sheet1", data: [["姓名", "number", "AFID"]]}];
         var users = data[0].data;
         if (error_code.code === errorCode.SUCCESS.code) {
             if (results && results.length >= 0) {
                 for (var i = 0; i < results.length; i++) {
-                    var user = [results[i].userName, results[i].ID];
+                    var user = [results[i].userName, results[i].number, results[i].ID];
                     users.push(user);
                 }
                 var buffer = xlsx.build(data);
@@ -111,8 +111,8 @@ exports.getAllUser = function (callback) {
     userDao.getAllUser(callback)
 };
 
-exports.updateUser = function (userName, ID, callback) {
-    userDao.updateUser(userName, ID, callback)
+exports.updateUser = function (user, callback) {
+    userDao.updateUser(user, callback)
 };
 
 exports.removeAllPrize = function (callback) {

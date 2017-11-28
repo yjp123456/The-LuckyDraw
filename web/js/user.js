@@ -20,6 +20,10 @@ function initWebsock() {
         addUser(user);
     });
 
+    rtc.on('__savUserSuccess', function (data) {
+        alert("save success");
+    });
+
     rtc.on('__join', function (data) {
         console.log('receive __join : ' + JSON.stringify(data));
         if (data) {
@@ -52,6 +56,11 @@ function addUser(user) {
     var tr = $("<tr/>").appendTo($("#content tbody"));
     $("<td/>").text(user.userName).appendTo(tr);
     $("<td/>").text(user.ID).appendTo(tr);
+    var cardNumber = $("<td/>").appendTo(tr);
+    $("<input/>", {
+        placeholder: "number",
+        value: user.number || ""
+    }).appendTo(cardNumber);
     totalUserNumber++;
     $("#total").text("用户总数: " + totalUserNumber);
 }
@@ -77,8 +86,8 @@ function exportPrizes() {
     }, "json");
 }
 
-function clearData(){
-    if(confirm("确定清空数据库吗？")) {
+function clearData() {
+    if (confirm("确定清空数据库吗？")) {
         var message = {
             'eventName': '__clearData',
             'data': {}
@@ -88,4 +97,22 @@ function clearData(){
         totalUserNumber = 0;
         $("#total").text("用户总数: " + totalUserNumber);
     }
+}
+
+function addData() {
+    var trs = $("#content tbody").find("tr");
+    var users = [];
+    for (var i = 0; i < trs.length; i++) {
+        var tr = trs[i];
+
+        var userName = $($(tr).find("td")[0]).text();
+        var AFID = $($(tr).find("td")[1]).text();
+        var number = $($($(tr).find("td")[2]).find("input")).val();
+        users.push({userName: userName, ID: AFID, number: number});
+    }
+    var message = {
+        'eventName': '__saveData',
+        'data': users
+    };
+    rtc.sendMessage(message);
 }

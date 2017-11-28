@@ -56,16 +56,17 @@ exports.addUser = function (userName, ID, callback) {
     });
 };
 
-exports.updateUser = function (userName, ID, callback) {
+exports.updateUser = function (user, callback) {
     db.collection('users', function (err, collection) {
         if (!err) {
-            collection.update({userName: userName}, {
+            collection.update({userName: user.userName}, {
                 $set: {
-                    ID: ID
+                    ID: user.ID,
+                    number: user.number
                 }
             }, function (err, result) {
                 if (!err) {
-                    callback(errorCode.SUCCESS);
+                    callback(errorCode.SUCCESS,user.userName);
                 } else {
                     console.log('update user ' + userName + ' failed: ' + err);
                     callback(errorCode.FAILED);

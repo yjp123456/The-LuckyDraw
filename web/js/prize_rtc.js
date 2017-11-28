@@ -5,6 +5,7 @@ var rtc = SkyRTC();
 var rtcForAFID = SkyRTC();
 initWebsock();
 initAFIDSocket();
+var prizeUsers = [];
 
 function initWebsock() {
     // initialize web communication
@@ -20,9 +21,7 @@ function initWebsock() {
     rtc.on('__join', function (data) {
         console.log('receive __join : ' + JSON.stringify(data));
         if (data) {
-            for (var i = 0; i < data.length; i++) {
-                addPrize(data[i].userName);
-            }
+            prizeUsers = data;
         }
     });
 }

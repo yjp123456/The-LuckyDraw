@@ -98,9 +98,10 @@
 <script src="./js/public/SkyRTC-client.js"></script>
 <script src="js/firework.js"></script>
 <script type="text/javascript" src="./js/public/iscroll.js"></script>
+<script src="./js/prize_rtc.js"></script>
 <script type="text/javascript">
     var myScroll;
-    var isNeedFirework = true;
+    var isNeedFirework = false;
     var userWidth;
     var prizeIndex = 0;
     var lineNumer = 4;
@@ -141,7 +142,11 @@
     $("#bg").click(function () {
         $(this).hide();
         init();
-        test();
+        for (var i = 0; i < prizeUsers.length; i++) {
+            addPrize(prizeUsers[i].userName);
+        }
+        isNeedFirework = true;
+        //test();
     })
 
     function init() {
@@ -159,7 +164,6 @@
         }
 
         $(".user").css("width", userWidth);
-        $(".user").css("height", "10vw");
 
         $(".l-pic-index").css("left", "50%");
         $(".r-pic-index").css("right", "50%");
@@ -196,7 +200,6 @@
             class: "red"
         }).appendTo(user);
         user.css("width", userWidth);
-        user.css("height", "10vw");
     }
 
     function addPrize(userName) {
@@ -238,6 +241,6 @@
 
 
 </script>
-<script src="./js/prize_rtc.js"></script>
+
 </body>
 </html>
