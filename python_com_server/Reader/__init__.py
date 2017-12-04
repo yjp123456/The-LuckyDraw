@@ -306,7 +306,8 @@ if __name__ == '__main__':
                     read_buff.append(UID)
                     datas.append(UID)
                     L_ERROR(logger, "(%d)%s", len(UID), UID)
-        websocket.notify(datas)
+        if len(datas) > 0:
+            websocket.notify(datas)
 
     reader = rfidReader('com5', timeout=3)
     read_buff = []
