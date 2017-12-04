@@ -300,12 +300,14 @@ if __name__ == '__main__':
         raise -1
     
     def onRead(tags):
+        datas = []
         for UID,info in tags.iteritems():
                 if UID not in read_buff:
-                    websocket.notify(UID)
                     read_buff.append(UID)
+                    datas.append(UID)
                     L_ERROR(logger, "(%d)%s", len(UID), UID)
-        
+        websocket.notify(datas)
+
     reader = rfidReader('com5', timeout=3)
     read_buff = []
     server = websocket.websocket_server()

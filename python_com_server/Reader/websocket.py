@@ -21,13 +21,13 @@ HANDSHAKE_STRING = "HTTP/1.1 101 Switching Protocols\r\n" \
 
 
 # 通知客户端
-def notify(afid):
+def notify(afids):
     for connection in clients.values():
         try:
             send_data(connection, json.dumps({
                 "eventName": "__AFID",
                 "data": {
-                    "AFID": afid
+                    "AFID": afids
                 }
             }))
         except Exception, e:
