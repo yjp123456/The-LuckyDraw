@@ -108,8 +108,7 @@ class rfidReader:
         self.com_lock.release()
 
     def readTags(self):
-        self.com_lock.acquire()
-        tag_UID = ""
+        self.com_lock.acquire()        
         try:
             if not self.checkPort():
                 raise StatusError("serial port is not ready")
@@ -143,7 +142,7 @@ class rfidReader:
             raise
         self.com_lock.release()
 #         tags.sort()
-        return tag_UID
+        return tags
 
     def aboutReader(self):
         if self.about is not None:
