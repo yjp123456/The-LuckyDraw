@@ -43,7 +43,7 @@ function initAFIDSocket() {
         console.log('receive AFID : ' + data.AFID);
         var message = {
             'eventName': '__addUserAFID',
-            'data': {ID: data.AFID}
+            'data': {IDs: data.AFID}
         };
         rtc.sendMessage(message);
     });

@@ -59,8 +59,8 @@ function SkyRTC(tableNumber) {
         var that = this;
         console.log("receive message: " + JSON.stringify(data));
         if (data) {
-            var IDs = data.ID;
-            for(var i = 0;i < IDs.length;i++){
+            var IDs = data.IDs;
+            for (var i = 0; i < IDs.length; i++) {
                 var ID = IDs[i];
                 if (that.prizes[socket.prize_name] && that.prizeUserExist(socket.prize_name, ID)) {
                     console.log("ID " + ID + " alredy in prize users, reject it");
@@ -75,11 +75,12 @@ function SkyRTC(tableNumber) {
                                 if (!that.prizes[prize_name])
                                     that.prizes[prize_name] = [];
                                 that.prizes[prize_name].push(user);
-                                var message = {
-                                    'eventName': '__addPrizeUserSuccess',
-                                    'data': user
-                                };
-                                that.broadcastInUser(prize_name, message);
+                                console.log("add prize user:" + JSON.stringify(user) + " success");
+                                /*var message = {
+                                 'eventName': '__addPrizeUserSuccess',
+                                 'data': user
+                                 };
+                                 that.broadcastInUser(prize_name, message);*/
                             });
                         } else {
                             console.log("ID " + ID + " doesn't match any user");
@@ -118,7 +119,7 @@ function SkyRTC(tableNumber) {
                                 that.users.push(users[i].userName);
                             } else {
                                 that.userAndID.push(users[i]);
-                                that.AFID[users[i].ID] = true;
+                                that.AFID[users[i].ID] = users[i].userName;
                             }
                         }
                     }
@@ -134,8 +135,8 @@ function SkyRTC(tableNumber) {
         var that = this;
         console.log("receive message: " + JSON.stringify(data));
         if (data) {
-            var IDs = data.ID;
-            for(var i = 0;i < IDs.length;i++){
+            var IDs = data.IDs;
+            for (var i = 0; i < IDs.length; i++) {
                 var ID = IDs[i];
                 if (that.AFID[ID]) {
                     console.log("ID " + ID + " have already used");
@@ -148,7 +149,7 @@ function SkyRTC(tableNumber) {
                     var userName = that.users[ran];
                     var user = {userName: userName, ID: ID};
 
-                    that.AFID[ID] = true;
+                    that.AFID[ID] = userName;
                     userLogic.updateUser(user, function (error_code, userName) {
                         if (error_code.code === errorCode.SUCCESS.code) {
                             var message = {
@@ -159,7 +160,7 @@ function SkyRTC(tableNumber) {
                             that.userAndID.push(user);
                             that.users.splice(ran, 1);
                         } else {
-                            that.AFID[ID] = false;
+                            delete that.AFID[ID];
                         }
                     });
 
@@ -195,7 +196,7 @@ SkyRTC.prototype.initGuestData = function (guest) {
     if (isUserManager)
         data = that.userAndID;
     else
-        data = that.prizes[prize_name] || [];
+        data = {"prizeUsers": that.prizes[prize_name] || [], "IDAndUser": that.AFID};
     var message = {
         'eventName': '__join',
         'data': data
@@ -275,7 +276,7 @@ SkyRTC.prototype.initDB = function (isReset) {
                                 that.users.push(users[i].userName);
                             } else {
                                 that.userAndID.push(users[i]);
-                                that.AFID[users[i].ID] = true;
+                                that.AFID[users[i].ID] = users[i].userName;
                             }
                         }
                     }
@@ -296,7 +297,7 @@ SkyRTC.prototype.initDB = function (isReset) {
                             that.users.push(users[i].userName);
                         } else {
                             that.userAndID.push(users[i]);
-                            that.AFID[users[i].ID] = true;
+                            that.AFID[users[i].ID] = users[i].userName;
                         }
                     }
                 }
