@@ -59,33 +59,36 @@ function SkyRTC(tableNumber) {
         var that = this;
         console.log("receive message: " + JSON.stringify(data));
         if (data) {
-            var ID = data.ID;
-            if (that.prizes[socket.prize_name] && that.prizeUserExist(socket.prize_name, ID)) {
-                console.log("ID " + ID + " alredy in prize users, reject it");
-                return;
-            }
-            userLogic.findUserByID(ID, function (error_code, users) {
-                if (error_code.code === errorCode.SUCCESS.code) {
-                    if (users && users.length > 0) {
-                        var user = users[0];
-                        var prize_name = socket.prize_name;
-                        userLogic.addPrizeUser(prize_name, user.userName, user.ID, function () {
-                            if (!that.prizes[prize_name])
-                                that.prizes[prize_name] = [];
-                            that.prizes[prize_name].push(user);
-                            var message = {
-                                'eventName': '__addPrizeUserSuccess',
-                                'data': user
-                            };
-                            that.broadcastInUser(prize_name, message);
-                        });
-                    } else {
-                        console.log("ID " + ID + " doesn't match any user");
-                    }
-                } else {
-                    console.log("get user by id fail");
+            var IDs = data.ID;
+            for(var i = 0;i < IDs.length;i++){
+                var ID = IDs[i];
+                if (that.prizes[socket.prize_name] && that.prizeUserExist(socket.prize_name, ID)) {
+                    console.log("ID " + ID + " alredy in prize users, reject it");
+                    continue;
                 }
-            });
+                userLogic.findUserByID(ID, function (error_code, users) {
+                    if (error_code.code === errorCode.SUCCESS.code) {
+                        if (users && users.length > 0) {
+                            var user = users[0];
+                            var prize_name = socket.prize_name;
+                            userLogic.addPrizeUser(prize_name, user.userName, user.ID, function () {
+                                if (!that.prizes[prize_name])
+                                    that.prizes[prize_name] = [];
+                                that.prizes[prize_name].push(user);
+                                var message = {
+                                    'eventName': '__addPrizeUserSuccess',
+                                    'data': user
+                                };
+                                that.broadcastInUser(prize_name, message);
+                            });
+                        } else {
+                            console.log("ID " + ID + " doesn't match any user");
+                        }
+                    } else {
+                        console.log("get user by id fail");
+                    }
+                });
+            }
         }
     });
 
@@ -131,35 +134,38 @@ function SkyRTC(tableNumber) {
         var that = this;
         console.log("receive message: " + JSON.stringify(data));
         if (data) {
-            var ID = data.ID;
-            if (that.AFID[ID]) {
-                console.log("ID " + ID + " have already used");
-                return;
-            }
+            var IDs = data.ID;
+            for(var i = 0;i < IDs.length;i++){
+                var ID = IDs[i];
+                if (that.AFID[ID]) {
+                    console.log("ID " + ID + " have already used");
+                    continue;
+                }
 
 
-            if (that.users.length > 0) {
-                var ran = parseInt(Math.random() * (that.users.length));
-                var userName = that.users[ran];
-                var user = {userName: userName, ID: ID};
+                if (that.users.length > 0) {
+                    var ran = parseInt(Math.random() * (that.users.length));
+                    var userName = that.users[ran];
+                    var user = {userName: userName, ID: ID};
 
-                that.AFID[ID] = true;
-                userLogic.updateUser(user, function (error_code, userName) {
-                    if (error_code.code === errorCode.SUCCESS.code) {
-                        var message = {
-                            'eventName': '__addUserAFIDSuccess',
-                            'data': {userName: userName, ID: ID}
-                        };
-                        that.sendMessage(that.guests[socket.id], message);
-                        that.userAndID.push(user);
-                        that.users.splice(ran, 1);
-                    } else {
-                        that.AFID[ID] = false;
-                    }
-                });
+                    that.AFID[ID] = true;
+                    userLogic.updateUser(user, function (error_code, userName) {
+                        if (error_code.code === errorCode.SUCCESS.code) {
+                            var message = {
+                                'eventName': '__addUserAFIDSuccess',
+                                'data': {userName: userName, ID: ID}
+                            };
+                            that.sendMessage(that.guests[socket.id], message);
+                            that.userAndID.push(user);
+                            that.users.splice(ran, 1);
+                        } else {
+                            that.AFID[ID] = false;
+                        }
+                    });
 
-            } else {
-                console.log("no enough user for AFID");
+                } else {
+                    console.log("no enough user for AFID");
+                }
             }
         }
     });
