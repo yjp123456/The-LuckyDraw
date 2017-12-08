@@ -29,6 +29,7 @@ function SkyRTC(tableNumber) {
     this.users = [];
     this.userAndID = [];
     this.AFID = {};
+    this.prizeUsers = {};
 
 
     this.on('__join', function (data, socket) {
@@ -62,11 +63,12 @@ function SkyRTC(tableNumber) {
             var IDs = data.IDs;
             for (var i = 0; i < IDs.length; i++) {
                 var ID = IDs[i];
-                if (that.prizes[socket.prize_name] && that.prizeUserExist(socket.prize_name, ID)) {
+                if (that.prizeUsers[ID]) {
                     console.log("ID " + ID + " alredy in prize users, reject it");
                     continue;
                 }
-                userLogic.findUserByID(ID, function (error_code, users) {
+                that.prizeUsers[ID] = true;
+                userLogic.findUserByID(ID, function (error_code, users, ID) {
                     if (error_code.code === errorCode.SUCCESS.code) {
                         if (users && users.length > 0) {
                             var user = users[0];
@@ -84,9 +86,11 @@ function SkyRTC(tableNumber) {
                             });
                         } else {
                             console.log("ID " + ID + " doesn't match any user");
+                            that.prizeUsers[ID] = false;
                         }
                     } else {
                         console.log("get user by id fail");
+                        that.prizeUsers[ID] = false;
                     }
                 });
             }
@@ -127,7 +131,6 @@ function SkyRTC(tableNumber) {
                     console.log("get user by id fail");
                 }
             });
-
         }
     });
 
@@ -143,24 +146,24 @@ function SkyRTC(tableNumber) {
                     continue;
                 }
 
-
                 if (that.users.length > 0) {
                     var ran = parseInt(Math.random() * (that.users.length));
                     var userName = that.users[ran];
-                    var user = {userName: userName, ID: ID};
+                    that.users.splice(ran, 1);
 
                     that.AFID[ID] = userName;
-                    userLogic.updateUser(user, function (error_code, userName) {
+                    userLogic.updateUser({userName: userName, ID: ID}, function (error_code, user) {
                         if (error_code.code === errorCode.SUCCESS.code) {
                             var message = {
                                 'eventName': '__addUserAFIDSuccess',
-                                'data': {userName: userName, ID: ID}
+                                'data': {userName: user.userName, ID: user.ID}
                             };
-                            that.sendMessage(that.guests[socket.id], message);
                             that.userAndID.push(user);
-                            that.users.splice(ran, 1);
+                            that.sendMessage(that.guests[socket.id], message);
+
                         } else {
-                            delete that.AFID[ID];
+                            delete that.AFID[user.ID];//recover data
+                            that.users.push(user.userName);
                         }
                     });
 
@@ -174,19 +177,6 @@ function SkyRTC(tableNumber) {
 }
 util.inherits(SkyRTC, events.EventEmitter);
 
-SkyRTC.prototype.prizeUserExist = function (prizeName, ID) {
-    var that = this;
-    var isExist = false;
-    if (that.prizes[prizeName]) {
-        for (var i = 0; i < that.prizes[prizeName].length; i++) {
-            if (that.prizes[prizeName][i].ID === ID) {
-                isExist = true;
-                break;
-            }
-        }
-    }
-    return isExist;
-};
 
 SkyRTC.prototype.initGuestData = function (guest) {
     var that = this;
@@ -312,6 +302,11 @@ SkyRTC.prototype.initDB = function (isReset) {
             if (prizes && prizes.length > 0) {
                 for (var i = 0; i < prizes.length; i++) {
                     that.prizes[prizes[i].prizeName] = prizes[i].users;
+                    if (prizes[i].users) {
+                        for (var j = 0; j < prizes[i].users.length; j++) {
+                            that.prizeUsers[prizes[i].users[j].ID] = true;
+                        }
+                    }
                 }
             }
         } else {

@@ -66,15 +66,15 @@ exports.updateUser = function (user, callback) {
                 }
             }, function (err, result) {
                 if (!err) {
-                    callback(errorCode.SUCCESS,user.userName);
+                    callback(errorCode.SUCCESS, user);
                 } else {
-                    console.log('update user ' + userName + ' failed: ' + err);
-                    callback(errorCode.FAILED);
+                    console.log('update user ' + user.userName + ' failed: ' + err);
+                    callback(errorCode.FAILED, user);
                 }
             });
         } else {
             console.log('get collection user failed : ' + err);
-            callback(errorCode.FAILED);
+            callback(errorCode.FAILED, user);
         }
     });
 };
@@ -84,15 +84,15 @@ exports.findUserByID = function (ID, callback) {
         if (!err) {
             collection.find({ID: ID}).toArray(function (err, results) {
                 if (!err) {
-                    callback(errorCode.SUCCESS, results);
+                    callback(errorCode.SUCCESS, results, ID);
                 } else {
                     console.log('get users error : ' + err);
-                    callback(errorCode.FAILED, null);
+                    callback(errorCode.FAILED, null, ID);
                 }
             });
         } else {
             console.log('get collection user failed : ' + err);
-            callback(errorCode.FAILED, null);
+            callback(errorCode.FAILED, null, ID);
         }
     });
 };
