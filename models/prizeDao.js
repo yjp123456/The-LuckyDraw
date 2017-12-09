@@ -7,14 +7,14 @@ var db = require('../database/msession');
 var ErrorCode = require('../constants/error_code');
 var errorCode = new ErrorCode();
 
-exports.addPrizeUser = function (prizeName, userName, ID, callback) {
+exports.addPrizeUser = function (prizeName, user, callback) {
     db.collection('prizes', function (err, collection) {
         if (!err) {
             collection.find({prizeName: prizeName}).toArray(function (err, results) {
                 if (!err) {
                     if (results && results.length > 0) {
                         var users = results[0].users;
-                        users.push({userName: userName, ID: ID});
+                        users.push(user);
 
                         collection.update({prizeName: prizeName}, {
                             $set: {
@@ -22,32 +22,32 @@ exports.addPrizeUser = function (prizeName, userName, ID, callback) {
                             }
                         }, function (err, result) {
                             if (!err) {
-                                callback(errorCode.SUCCESS,userName);
+                                callback(errorCode.SUCCESS,user);
                             } else {
                                 console.log('update prize ' + prizeName + ' failed: ' + err);
-                                callback(errorCode.FAILED);
+                                callback(errorCode.FAILED,user);
                             }
                         });
                     } else {
-                        var data = {prizeName: prizeName, users: [{userName: userName, ID: ID}]};
+                        var data = {prizeName: prizeName, users: [user]};
                         collection.insert(data, function (err, docs) {
                             if (!err) {
-                                callback(errorCode.SUCCESS,userName);
+                                callback(errorCode.SUCCESS,user);
                             } else {
                                 console.log('insert prize ' + prizeName + ' failed : ' + err);
-                                callback(errorCode.FAILED);
+                                callback(errorCode.FAILED,user);
                             }
                         });
                     }
 
                 } else {
                     console.log('get prize table error : ' + err);
-                    callback(errorCode.FAILED, null);
+                    callback(errorCode.FAILED, user);
                 }
             });
         } else {
             console.log('get prize collection failed : ' + err);
-            callback(errorCode.FAILED, userName);
+            callback(errorCode.FAILED, user);
         }
     });
 };

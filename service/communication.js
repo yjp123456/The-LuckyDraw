@@ -73,16 +73,15 @@ function SkyRTC(tableNumber) {
                         if (users && users.length > 0) {
                             var user = users[0];
                             var prize_name = socket.prize_name;
-                            userLogic.addPrizeUser(prize_name, user.userName, user.ID, function () {
-                                if (!that.prizes[prize_name])
-                                    that.prizes[prize_name] = [];
-                                that.prizes[prize_name].push(user);
-                                console.log("add prize user:" + JSON.stringify(user) + " success");
-                                /*var message = {
-                                 'eventName': '__addPrizeUserSuccess',
-                                 'data': user
-                                 };
-                                 that.broadcastInUser(prize_name, message);*/
+                            userLogic.addPrizeUser(prize_name, user, function (err, user) {
+                                if (err.code === errorCode.SUCCESS.code) {
+                                    if (!that.prizes[prize_name])
+                                        that.prizes[prize_name] = [];
+                                    that.prizes[prize_name].push(user);
+                                    console.log("add prize user:" + JSON.stringify(user) + " success");
+                                } else {
+                                    console.log("add prize user:" + JSON.stringify(user) + " fail");
+                                }
                             });
                         } else {
                             console.log("ID " + ID + " doesn't match any user");
@@ -175,6 +174,7 @@ function SkyRTC(tableNumber) {
     });
 
 }
+
 util.inherits(SkyRTC, events.EventEmitter);
 
 
@@ -255,6 +255,7 @@ SkyRTC.prototype.initDB = function (isReset) {
     that.users = [];
     that.userAndID = [];
     that.AFID = {};
+    that.prizeUsers = {};
     if (isReset) {
         console.log("start reset all user");
         userLogic.readUser(function () {

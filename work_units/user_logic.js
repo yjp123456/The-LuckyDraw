@@ -119,8 +119,8 @@ exports.removeAllPrize = function (callback) {
     prizeDao.removeAll(callback);
 };
 
-exports.addPrizeUser = function (prizeName, userName, ID, callback) {
-    prizeDao.addPrizeUser(prizeName, userName, ID, callback);
+exports.addPrizeUser = function (prizeName, user, callback) {
+    prizeDao.addPrizeUser(prizeName, user, callback);
 };
 
 exports.getAllPrize = function (callback) {
