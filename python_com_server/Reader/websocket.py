@@ -22,6 +22,7 @@ HANDSHAKE_STRING = "HTTP/1.1 101 Switching Protocols\r\n" \
 
 # 通知客户端
 def notify(afids):
+    result = True
     for connection in clients.values():
         try:
             send_data(connection, json.dumps({
@@ -31,7 +32,9 @@ def notify(afids):
                 }
             }))
         except Exception, e:
+            result = False
             print e.message
+    return result
 
 
 def send_data(socket, data):
