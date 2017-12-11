@@ -310,7 +310,7 @@ if __name__ == '__main__':
             result = websocket.notify(datas)
             if result is False:
                 for item in datas:
-                    read_buff.pop(item)
+                    read_buff.remove(item)
 
 
     reader = rfidReader('com5', timeout=3)
