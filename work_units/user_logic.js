@@ -75,17 +75,15 @@ exports.exportUser = function (callback) {
 
 exports.exportPrize = function (callback) {
     prizeDao.getAllPrize(function (error_code, prizes) {
-        var data = [{name: "sheet1", data: [["奖项", "姓名"]]}];
+        var data = [{name: "sheet1", data: [["奖项", "姓名", "number"]]}];
         var results = data[0].data;
         if (error_code.code === errorCode.SUCCESS.code) {
             if (prizes && prizes.length >= 0) {
                 for (var i = 0; i < prizes.length; i++) {
-                    var prizeUsers = prizes[i].users;
+                    var prizeUser = prizes[i].user;
                     var prizeName = prizes[i].prizeName;
-                    for (var j = 0; j < prizeUsers.length; j++) {
-                        var prize = [prizeName, prizeUsers[j].userName];
-                        results.push(prize);
-                    }
+                    var prize = [prizeName, prizeUser.userName, prizeUser.number];
+                    results.push(prize);
                 }
                 var buffer = xlsx.build(data);
                 fs.writeFile(exportPrizePath, buffer, function (err) {

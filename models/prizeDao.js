@@ -10,38 +10,11 @@ var errorCode = new ErrorCode();
 exports.addPrizeUser = function (prizeName, user, callback) {
     db.collection('prizes', function (err, collection) {
         if (!err) {
-            collection.find({prizeName: prizeName}).toArray(function (err, results) {
+            collection.insert({prizeName: prizeName, user: user}, function (err, docs) {
                 if (!err) {
-                    if (results && results.length > 0) {
-                        var users = results[0].users;
-                        users.push(user);
-
-                        collection.update({prizeName: prizeName}, {
-                            $set: {
-                                users: users
-                            }
-                        }, function (err, result) {
-                            if (!err) {
-                                callback(errorCode.SUCCESS,user);
-                            } else {
-                                console.log('update prize ' + prizeName + ' failed: ' + err);
-                                callback(errorCode.FAILED,user);
-                            }
-                        });
-                    } else {
-                        var data = {prizeName: prizeName, users: [user]};
-                        collection.insert(data, function (err, docs) {
-                            if (!err) {
-                                callback(errorCode.SUCCESS,user);
-                            } else {
-                                console.log('insert prize ' + prizeName + ' failed : ' + err);
-                                callback(errorCode.FAILED,user);
-                            }
-                        });
-                    }
-
+                    callback(errorCode.SUCCESS, user);
                 } else {
-                    console.log('get prize table error : ' + err);
+                    console.log('insert prize ' + prizeName + ' failed : ' + err);
                     callback(errorCode.FAILED, user);
                 }
             });

@@ -302,12 +302,10 @@ SkyRTC.prototype.initDB = function (isReset) {
         if (error_code.code === errorCode.SUCCESS.code) {
             if (prizes && prizes.length > 0) {
                 for (var i = 0; i < prizes.length; i++) {
-                    that.prizes[prizes[i].prizeName] = prizes[i].users;
-                    if (prizes[i].users) {
-                        for (var j = 0; j < prizes[i].users.length; j++) {
-                            that.prizeUsers[prizes[i].users[j].ID] = true;
-                        }
-                    }
+                    if (!that.prizes[prizes[i].prizeName])
+                        that.prizes[prizes[i].prizeName] = [];
+                    that.prizes[prizes[i].prizeName].push(prizes[i].user);
+                    that.prizeUsers[prizes[i].user.ID] = true;
                 }
             }
         } else {
