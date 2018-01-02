@@ -12,13 +12,6 @@ var db = require('../database/msession');
 var ErrorCode = require('../constants/error_code');
 var errorCode = new ErrorCode();
 
-/**
- * Player
- * Fields:
- *      playerName (key)
- *      displayName
- *      tableNumber
- */
 exports.removeAll = function (callback) {
 
     db.collection('users', function (err, collection) {
@@ -38,10 +31,10 @@ exports.removeAll = function (callback) {
     });
 };
 
-exports.addUser = function (enName,cnName, PSID, ID, callback) {
+exports.addUser = function (enName, cnName, PSID, ID, callback) {
     db.collection('users', function (err, collection) {
         if (!err) {
-            collection.insert({enName: enName,cnName:cnName, ID: ID, PSID: PSID}, function (err, docs) {
+            collection.insert({enName: enName, cnName: cnName, ID: ID, PSID: PSID}, function (err, docs) {
                 if (!err) {
                     callback(errorCode.SUCCESS);
                 } else {
