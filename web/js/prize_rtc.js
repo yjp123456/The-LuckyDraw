@@ -47,10 +47,10 @@ function initAFIDSocket() {
         rtc.sendMessage(message);
         for (var i = 0; i < ids.length; i++) {
             var id = ids[i];
-            var userName = IDAndUser[id].userName;
+            var enName = IDAndUser[id].enName;
             var PSID = IDAndUser[id].PSID;
-            if (userName && PSID && !allPrizeUser[id]) {
-                addPrize(userName, PSID, id);
+            if (enName && PSID && !allPrizeUser[id]) {
+                addPrize(enName, PSID, id);
             } else {
                 console.log("ID ->" + id + " doesn't match any user or already used");
             }

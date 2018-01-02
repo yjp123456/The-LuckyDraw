@@ -34,7 +34,7 @@ function initWebsock() {
             $("#total").text("用户总数: " + totalUserNumber);
         }
         //test
-     /*   var message = {
+       /* var message = {
             'eventName': '__addUserAFID',
             'data': {IDs: ["dfsdfsdf","dsfsewfdf","gdsgsde","fewdifdfd","nvbfjfds","ifewufjsdjfs","iefue"]}
         };
@@ -60,7 +60,8 @@ function initAFIDSocket() {
 
 function addUser(user) {
     var tr = $("<tr/>").appendTo($("#content tbody"));
-    $("<td/>").text(user.userName).appendTo(tr);
+    $("<td/>").text(user.enName).appendTo(tr);
+    $("<td/>").text(user.cnName).appendTo(tr);
     $("<td/>").text(user.PSID).appendTo(tr);
     $("<td/>").text(user.ID).appendTo(tr);
     var cardNumber = $("<td/>").appendTo(tr);
@@ -111,12 +112,12 @@ function addData() {
     var users = [];
     for (var i = 0; i < trs.length; i++) {
         var tr = trs[i];
-
-        var userName = $($(tr).find("td")[0]).text();
-        var PSID = $($(tr).find("td")[1]).text();
-        var AFID = $($(tr).find("td")[2]).text();
-        var number = $($($(tr).find("td")[3]).find("input")).val();
-        users.push({userName: userName, PSID: PSID, ID: AFID, number: number});
+        var enName = $($(tr).find("td")[0]).text();
+        var cnName = $($(tr).find("td")[1]).text();
+        var PSID = $($(tr).find("td")[2]).text();
+        var AFID = $($(tr).find("td")[3]).text();
+        var number = $($($(tr).find("td")[4]).find("input")).val();
+        users.push({enName: enName,cnName:cnName, PSID: PSID, ID: AFID, number: number});
     }
     var message = {
         'eventName': '__saveData',

@@ -103,7 +103,7 @@ function SkyRTC(tableNumber) {
             for (var i = 0; i < data.length; i++) {
                 userLogic.updateUser(data[i], function (error_code, user) {
                     if (error_code.code === errorCode.SUCCESS.code) {
-                        console.log("save user:" + user.userName + " success");
+                        console.log("save user:" + user.enName + " success");
                     }
                     num++;
                     if (num === data.length) {
@@ -159,7 +159,7 @@ function SkyRTC(tableNumber) {
                         if (error_code.code === errorCode.SUCCESS.code) {
                             var message = {
                                 'eventName': '__addUserAFIDSuccess',
-                                'data': {userName: user.userName, PSID: user.PSID, ID: user.ID}
+                                'data': {enName: user.enName,cnName:user.cnName, PSID: user.PSID, ID: user.ID}
                             };
                             that.userAndID.push(user);
                             that.sendMessage(that.guests[socket.id], message);

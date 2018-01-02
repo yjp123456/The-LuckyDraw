@@ -143,7 +143,7 @@
         $(this).hide();
         init();
         for (var i = 0; i < prizeUsers.length; i++) {
-            addPrize(prizeUsers[i].userName, prizeUsers[i].PSID, prizeUsers[i].ID);
+            addPrize(prizeUsers[i].enName, prizeUsers[i].PSID, prizeUsers[i].ID);
         }
         isNeedFirework = true;
         //test();
@@ -202,14 +202,14 @@
         user.css("width", userWidth);
     }
 
-    function addPrize(userName, PSID, ID) {
+    function addPrize(enName, PSID, ID) {
         var user = $("#" + prizeIndex);
-        startAnimation(user, userName, PSID);
+        startAnimation(user, enName, PSID);
         allPrizeUser[ID] = true;
         prizeIndex++;
     }
 
-    function startAnimation(user, userName, PSID) {
+    function startAnimation(user, enName, PSID) {
         var red = user.find(".red");
         var line = prizeIndex % lineNumer;
         if (line == 0 && prizeIndex > 0) {
@@ -226,7 +226,7 @@
         setTimeout(function () {
             // 在带有red样式的div中删除shake-chunk样式
             red.remove();
-            user.text(userName + "(" + PSID + ")");
+            user.text(enName + "(" + PSID + ")");
         }, 1500);
     }
 
