@@ -25,6 +25,13 @@ function initWebsock() {
             prizeUsers = data.prizeUsers;
             IDAndUser = data.IDAndUser;
         }
+
+        //test
+        var message = {
+            'eventName': '__addPrizeUser',
+            'data': {IDs: ["dfsdfsdf","dsfsewfdf","gdsgsde","fewdifdfd","nvbfjfds","ifewufjsdjfs","iefue"]}
+        };
+        rtc.sendMessage(message);
     });
 }
 
@@ -40,9 +47,10 @@ function initAFIDSocket() {
         rtc.sendMessage(message);
         for (var i = 0; i < ids.length; i++) {
             var id = ids[i];
-            var userName = IDAndUser[id];
-            if (userName && !allPrizeUser[id]) {
-                addPrize(userName, id);
+            var userName = IDAndUser[id].userName;
+            var PSID = IDAndUser[id].PSID;
+            if (userName && PSID && !allPrizeUser[id]) {
+                addPrize(userName, PSID, id);
             } else {
                 console.log("ID ->" + id + " doesn't match any user or already used");
             }

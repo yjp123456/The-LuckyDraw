@@ -27,8 +27,9 @@ exports.readUser = function (callback) {
                 var num = 0;
                 for (var i = 0; i < users.length; i++) {
                     var userName = users[i][0];
+                    var PSID = users[i][1];
                     if (userName) {
-                        userDao.addUser(userName, "N/A", function (error_code, user) {
+                        userDao.addUser(userName, PSID, "N/A", function (error_code, user) {
                             if (error_code.code !== errorCode.SUCCESS.code) {
                                 console.log("add user " + user + "fail");
                             }
@@ -49,12 +50,12 @@ exports.readUser = function (callback) {
 
 exports.exportUser = function (callback) {
     userDao.getAllUser(function (error_code, results) {
-        var data = [{name: "sheet1", data: [["姓名", "number", "AFID"]]}];
+        var data = [{name: "sheet1", data: [["姓名", "PSID", "number", "AFID"]]}];
         var users = data[0].data;
         if (error_code.code === errorCode.SUCCESS.code) {
             if (results && results.length >= 0) {
                 for (var i = 0; i < results.length; i++) {
-                    var user = [results[i].userName, results[i].number, results[i].ID];
+                    var user = [results[i].userName, results[i].PSID, results[i].number, results[i].ID];
                     users.push(user);
                 }
                 var buffer = xlsx.build(data);
@@ -75,14 +76,14 @@ exports.exportUser = function (callback) {
 
 exports.exportPrize = function (callback) {
     prizeDao.getAllPrize(function (error_code, prizes) {
-        var data = [{name: "sheet1", data: [["奖项", "姓名", "number"]]}];
+        var data = [{name: "sheet1", data: [["奖项", "姓名", "PSID", "number"]]}];
         var results = data[0].data;
         if (error_code.code === errorCode.SUCCESS.code) {
             if (prizes && prizes.length >= 0) {
                 for (var i = 0; i < prizes.length; i++) {
                     var prizeUser = prizes[i].user;
                     var prizeName = prizes[i].prizeName;
-                    var prize = [prizeName, prizeUser.userName, prizeUser.number];
+                    var prize = [prizeName, prizeUser.userName, prizeUser.PSID, prizeUser.number];
                     results.push(prize);
                 }
                 var buffer = xlsx.build(data);

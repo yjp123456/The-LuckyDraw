@@ -119,10 +119,10 @@ function SkyRTC(tableNumber) {
                     if (users && users.length > 0) {
                         for (var i = 0; i < users.length; i++) {
                             if (users[i].ID === "N/A") {
-                                that.users.push(users[i].userName);
+                                that.users.push(users[i]);
                             } else {
                                 that.userAndID.push(users[i]);
-                                that.AFID[users[i].ID] = users[i].userName;
+                                that.AFID[users[i].ID] = users[i];
                             }
                         }
                     }
@@ -147,22 +147,23 @@ function SkyRTC(tableNumber) {
 
                 if (that.users.length > 0) {
                     var ran = parseInt(Math.random() * (that.users.length));
-                    var userName = that.users[ran];
+                    var user = that.users[ran];
                     that.users.splice(ran, 1);
-
-                    that.AFID[ID] = userName;
-                    userLogic.updateUser({userName: userName, ID: ID}, function (error_code, user) {
+                    user.ID = ID;
+                    that.AFID[ID] = user;
+                    userLogic.updateUser(user, function (error_code, user) {
                         if (error_code.code === errorCode.SUCCESS.code) {
                             var message = {
                                 'eventName': '__addUserAFIDSuccess',
-                                'data': {userName: user.userName, ID: user.ID}
+                                'data': {userName: user.userName, PSID: user.PSID, ID: user.ID}
                             };
                             that.userAndID.push(user);
                             that.sendMessage(that.guests[socket.id], message);
 
                         } else {
                             delete that.AFID[user.ID];//recover data
-                            that.users.push(user.userName);
+                            delete user.ID;
+                            that.users.push(user);
                         }
                     });
 
@@ -264,10 +265,10 @@ SkyRTC.prototype.initDB = function (isReset) {
                     if (users && users.length > 0) {
                         for (var i = 0; i < users.length; i++) {
                             if (users[i].ID === "N/A") {
-                                that.users.push(users[i].userName);
+                                that.users.push(users[i]);
                             } else {
                                 that.userAndID.push(users[i]);
-                                that.AFID[users[i].ID] = users[i].userName;
+                                that.AFID[users[i].ID] = users[i];
                             }
                         }
                     }
@@ -285,10 +286,10 @@ SkyRTC.prototype.initDB = function (isReset) {
                 if (users && users.length > 0) {
                     for (var i = 0; i < users.length; i++) {
                         if (users[i].ID === "N/A") {
-                            that.users.push(users[i].userName);
+                            that.users.push(users[i]);
                         } else {
                             that.userAndID.push(users[i]);
-                            that.AFID[users[i].ID] = users[i].userName;
+                            that.AFID[users[i].ID] = users[i];
                         }
                     }
                 }

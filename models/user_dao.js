@@ -38,10 +38,10 @@ exports.removeAll = function (callback) {
     });
 };
 
-exports.addUser = function (userName, ID, callback) {
+exports.addUser = function (userName, PSID, ID, callback) {
     db.collection('users', function (err, collection) {
         if (!err) {
-            collection.insert({userName: userName, ID: ID}, function (err, docs) {
+            collection.insert({userName: userName, ID: ID, PSID: PSID}, function (err, docs) {
                 if (!err) {
                     callback(errorCode.SUCCESS);
                 } else {
@@ -59,7 +59,7 @@ exports.addUser = function (userName, ID, callback) {
 exports.updateUser = function (user, callback) {
     db.collection('users', function (err, collection) {
         if (!err) {
-            collection.update({userName: user.userName}, {
+            collection.update({PSID: user.PSID}, {
                 $set: {
                     ID: user.ID,
                     number: user.number

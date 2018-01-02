@@ -33,6 +33,12 @@ function initWebsock() {
             totalUserNumber = data.length;
             $("#total").text("用户总数: " + totalUserNumber);
         }
+        //test
+        var message = {
+            'eventName': '__addUserAFID',
+            'data': {IDs: ["dfsdfsdf","dsfsewfdf","gdsgsde","fewdifdfd","nvbfjfds","ifewufjsdjfs","iefue"]}
+        };
+        rtc.sendMessage(message);
     });
 }
 
@@ -55,6 +61,7 @@ function initAFIDSocket() {
 function addUser(user) {
     var tr = $("<tr/>").appendTo($("#content tbody"));
     $("<td/>").text(user.userName).appendTo(tr);
+    $("<td/>").text(user.PSID).appendTo(tr);
     $("<td/>").text(user.ID).appendTo(tr);
     var cardNumber = $("<td/>").appendTo(tr);
     $("<input/>", {
@@ -106,9 +113,10 @@ function addData() {
         var tr = trs[i];
 
         var userName = $($(tr).find("td")[0]).text();
-        var AFID = $($(tr).find("td")[1]).text();
-        var number = $($($(tr).find("td")[2]).find("input")).val();
-        users.push({userName: userName, ID: AFID, number: number});
+        var PSID = $($(tr).find("td")[1]).text();
+        var AFID = $($(tr).find("td")[2]).text();
+        var number = $($($(tr).find("td")[3]).find("input")).val();
+        users.push({userName: userName, PSID: PSID, ID: AFID, number: number});
     }
     var message = {
         'eventName': '__saveData',
