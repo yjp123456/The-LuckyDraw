@@ -13,7 +13,7 @@ var errorCode = new ErrorCode();
 var isReset = parseInt(process.argv[2]) || false;
 
 var httpServer = require('http').createServer(app);
-var httpPort = normalizePort('3000');
+var httpPort = normalizePort('3001');
 httpServer.listen(httpPort);
 
 db.open(function (err, db) {

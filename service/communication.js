@@ -99,10 +99,33 @@ function SkyRTC(tableNumber) {
     this.on('__saveData', function (data, socket) {
         var that = this;
         if (data && socket.isUserManager) {
+            var num = 0;
             for (var i = 0; i < data.length; i++) {
-                userLogic.updateUser(data[i], function (error_code, userName) {
+                userLogic.updateUser(data[i], function (error_code, user) {
                     if (error_code.code === errorCode.SUCCESS.code) {
-                        console.log("save user:" + userName + " success");
+                        console.log("save user:" + user.userName + " success");
+                    }
+                    num++;
+                    if (num === data.length) {
+                        that.users = [];
+                        that.userAndID = [];
+                        that.AFID = {};
+                        userLogic.getAllUser(function (error_code, users) {
+                            if (error_code.code === errorCode.SUCCESS.code) {
+                                if (users && users.length > 0) {
+                                    for (var i = 0; i < users.length; i++) {
+                                        if (users[i].ID === "N/A") {
+                                            that.users.push(users[i]);
+                                        } else {
+                                            that.userAndID.push(users[i]);
+                                            that.AFID[users[i].ID] = users[i];
+                                        }
+                                    }
+                                }
+                            } else {
+                                console.log("get user by id fail");
+                            }
+                        });
                     }
                 });
             }
@@ -111,25 +134,6 @@ function SkyRTC(tableNumber) {
                 'data': {}
             };
             that.sendMessage(socket, message);
-            that.users = [];
-            that.userAndID = [];
-            that.AFID = {};
-            userLogic.getAllUser(function (error_code, users) {
-                if (error_code.code === errorCode.SUCCESS.code) {
-                    if (users && users.length > 0) {
-                        for (var i = 0; i < users.length; i++) {
-                            if (users[i].ID === "N/A") {
-                                that.users.push(users[i]);
-                            } else {
-                                that.userAndID.push(users[i]);
-                                that.AFID[users[i].ID] = users[i];
-                            }
-                        }
-                    }
-                } else {
-                    console.log("get user by id fail");
-                }
-            });
         }
     });
 

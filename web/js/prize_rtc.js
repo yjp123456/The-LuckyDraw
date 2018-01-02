@@ -27,11 +27,11 @@ function initWebsock() {
         }
 
         //test
-        var message = {
+       /* var message = {
             'eventName': '__addPrizeUser',
             'data': {IDs: ["dfsdfsdf","dsfsewfdf","gdsgsde","fewdifdfd","nvbfjfds","ifewufjsdjfs","iefue"]}
         };
-        rtc.sendMessage(message);
+        rtc.sendMessage(message);*/
     });
 }
 

@@ -34,11 +34,11 @@ function initWebsock() {
             $("#total").text("用户总数: " + totalUserNumber);
         }
         //test
-        var message = {
+     /*   var message = {
             'eventName': '__addUserAFID',
             'data': {IDs: ["dfsdfsdf","dsfsewfdf","gdsgsde","fewdifdfd","nvbfjfds","ifewufjsdjfs","iefue"]}
         };
-        rtc.sendMessage(message);
+        rtc.sendMessage(message);*/
     });
 }
 

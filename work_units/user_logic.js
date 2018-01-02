@@ -27,7 +27,7 @@ exports.readUser = function (callback) {
                 var num = 0;
                 for (var i = 0; i < users.length; i++) {
                     var userName = users[i][0];
-                    var PSID = users[i][1];
+                    var PSID = users[i][1] + "";
                     if (userName) {
                         userDao.addUser(userName, PSID, "N/A", function (error_code, user) {
                             if (error_code.code !== errorCode.SUCCESS.code) {
